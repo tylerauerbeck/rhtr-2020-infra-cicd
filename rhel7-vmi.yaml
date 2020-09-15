@@ -2,18 +2,14 @@ apiVersion: kubevirt.io/v1alpha3
 kind: VirtualMachine
 metadata:
   labels:
-    app: rhel7-base
-    vm.kubevirt.io/template: rhel7-server-small-v0.11.3
-    vm.kubevirt.io/template.revision: "1"
-    vm.kubevirt.io/template.version: devel
-  name: rhel7-base
-  generateName: rhel7-base-
+    app: centos-base
+  generateName: centos7-base-
 spec:
   running: false
   template:
     metadata:
       labels:
-        kubevirt.io/domain: rhel7-base
+        kubevirt.io/domain: centos7-base
         kubevirt.io/size: small
     spec:
       domain:
@@ -42,12 +38,13 @@ spec:
         pod: {}
       terminationGracePeriodSeconds: 180
       volumes:
-      - name: rootdisk
-        persistentVolumeClaim:
-          claimName: rhel7-vm-disk
+      - containerDisk:
+          image: quay.io/tauerbec/centos-containerdisk:latest
+        name: rootdisk
       - cloudInitNoCloud:
           userData: |-
             #cloud-config
-            password: redhat
+            password: centos 
             chpasswd: { expire: False }
+            hostname: centos7-base
         name: cloudinitdisk
