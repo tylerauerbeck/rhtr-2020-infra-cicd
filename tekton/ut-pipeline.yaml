@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: rhtr-dns-ut 
+spec:
+#  params:
+#    - name: context
+#      type: string
+#      description: Path to context
+#      default: /some/where/or/other
+  tasks:
+    - name: build-skaffold-web
+      taskRef:
+        name: build-push
+      params:
+        - name: pathToDockerFile
+          value: Dockerfile
+        - name: pathToContext
+          value: "$(params.context)"

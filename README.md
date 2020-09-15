@@ -36,3 +36,8 @@ Start your VM:
 virtctl start XYZ
 ```
 
+Tasks:
+
+
+kubectl apply -f https://raw.githubusercontent.com/tektoncd/catalog/master/task/openshift-client/0.1/openshift-client.yaml
+kubectl apply -f https://raw.githubusercontent.com/tylerauerbeck/catalog/master/task/virtctl/0.1/virtctl.yaml
