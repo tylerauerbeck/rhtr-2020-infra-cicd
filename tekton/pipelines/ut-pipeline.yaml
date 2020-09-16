@@ -1,0 +1,32 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: rhtr-dns-ut 
+spec:
+#  params:
+#    - name: context
+#      type: string
+#      description: Path to context
+#      default: /some/where/or/other
+  tasks:
+    - name: create-vm 
+      taskRef:
+        name: create-vm 
+      params:
+        - name: FILE
+          value: 'https://raw.githubusercontent.com/tylerauerbeck/rhtr-2020-infra-cicd/main/cnv/rhel7-vmi.yaml'
+    - name: get-vm
+      taskRef:
+        name: openshift-client
+      params:
+        - name: ARGS
+          value: ['get',"$(tasks.create-vm.results.openshift-resources)"]
+    - name: virtctl
+      taskRef:
+        name: virtctl
+      params:
+        - name: ARGS
+          value:
+            - start
+            - "$(tasks.create-vm.results.openshift-resources)"
+      
