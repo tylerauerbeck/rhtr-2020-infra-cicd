@@ -94,11 +94,11 @@ spec:
              - -n cnv-tekton-$(tasks.create-id.results.pipeline-id)
        runAfter:
          - create-vmi
- This is cheating. We're just outright waiting for 5 minutes to give the VM time to stand up
+# This is cheating. We're just outright waiting for 5 minutes to give the VM time to stand up
      - name: wait-for-vm
        taskRef:
          name: sleep
        params:
          - name: sleepSeconds
-           value: 300
-     - name: run-ansible 
+           value: "300"
+#     - name: run-ansible

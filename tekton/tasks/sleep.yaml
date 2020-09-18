@@ -20,6 +20,6 @@ spec:
     image: registry.access.redhat.com/ubi8/ubi
     script: |
       #!/bin/bash
-      echo 'Sleepy time: $(sleepSeconds)'
-      sleep $(sleepSeconds)
+      echo 'Sleepy time: $(params.sleepSeconds)'
+      sleep $(params.sleepSeconds)
       echo 'Time to wake up!'
