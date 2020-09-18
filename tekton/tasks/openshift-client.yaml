@@ -17,9 +17,7 @@ spec:
     OpenShift is a Kubernetes distribution from Red Hat which provides oc,
     the OpenShift CLI that complements kubectl for simplifying deployment
     and configuration applications on OpenShift.
-  results:
-  - name: openshift-resources
-    description: List of impacted openshift resources
+
   params:
   - name: SCRIPT
     description: The OpenShift CLI arguments to run

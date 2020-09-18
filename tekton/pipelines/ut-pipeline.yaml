@@ -3,30 +3,42 @@ kind: Pipeline
 metadata:
   name: rhtr-dns-ut 
 spec:
-#  params:
-#    - name: context
-#      type: string
-#      description: Path to context
-#      default: /some/where/or/other
   tasks:
-    - name: create-vm 
-      taskRef:
-        name: create-vm 
-      params:
-        - name: FILE
-          value: 'https://raw.githubusercontent.com/tylerauerbeck/rhtr-2020-infra-cicd/main/cnv/rhel7-vmi.yaml'
-    - name: get-vm
-      taskRef:
-        name: openshift-client
-      params:
-        - name: ARGS
-          value: ['get',"$(tasks.create-vm.results.openshift-resources)"]
-    - name: virtctl
-      taskRef:
-        name: virtctl
-      params:
-        - name: ARGS
-          value:
-            - start
-            - "$(tasks.create-vm.results.openshift-resources)"
+     - name: create-id
+       taskRef:
+         name: create-id
+     - name: create-ns
+       taskRef:
+         name: openshift-client 
+       params:
+         - name: ARGS
+           value:
+             - new-project
+             - cnv-tekton-$(tasks.create-id.results.pipeline-id)
+#     - name: lint-dns
+#       taskRef:
+#         name: ansible-lint
+#       params:
+#         - name: ARGS
+#           value:
+     - name: create-vmi
+       taskRef:
+         name: openshift-client
+       params:
+         - name: ARGS
+           value: ["apply","-f","https://raw.githubusercontent.com/tylerauerbeck/rhtr-2020-infra-cicd/main/cnv/fedora32.yaml"]
+     - name: expose-vmi-ssh
+       taskRef:
+         name: virtctl
+       params:
+         - params: ARGS
+           value: ["expose","vmi-fedora-1"]
+     - name: wait-for-vm
+       taskRef:
+         name: sleep
+       params:
+         - name: sleepSeconds
+           value: 200
+#     - name: run-ansible 
+
       
