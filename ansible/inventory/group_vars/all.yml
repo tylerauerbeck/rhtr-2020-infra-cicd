@@ -1,0 +1,13 @@
+---
+
+ansible_become: true
+ansible_user=fedora
+ansible_ssh_pass=fedora
+
+dns_data:
+  views:
+  - name: private
+    named:
+      recursion: 'yes'
+    default_forwarders:
+    - 8.8.8.8

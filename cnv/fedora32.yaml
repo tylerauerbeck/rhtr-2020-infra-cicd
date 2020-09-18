@@ -34,7 +34,7 @@ spec:
       type: ""
     resources:
       requests:
-        memory: 1024M 
+        memory: 4Gi 
   terminationGracePeriodSeconds: 0
   volumes:
   - containerDisk:
