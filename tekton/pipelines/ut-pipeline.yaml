@@ -137,6 +137,12 @@ spec:
                then
                  ansible-galaxy install -r requirements.yml -p roles
                fi
+           - name: list-pvc
+             image: docker.io/ansible/ansible-runner
+             script: |
+               #!/bin/bash
+               ls $(workspaces.playbooks.path)
+               ls $(workspaces.playbooks.path)/ansible
            - name: run-playbook
              image: docker.io/ansible/ansible-runner
              command: ['ansible-playbook']
