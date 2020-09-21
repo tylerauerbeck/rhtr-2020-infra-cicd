@@ -1,4 +1,4 @@
 ---
 
-- src: https://github.com/redhat-cop/infra-ansible
-  version: v1.0.20
+- src: https://github.com/tylerauerbeck/infra-ansible
+  version: py3-config-dns-server-bind
