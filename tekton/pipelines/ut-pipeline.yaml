@@ -105,21 +105,14 @@ spec:
                #!/bin/bash
                set -e
                ansible-galaxy install -r $(workspaces.playbooks.path)/ansible/requirements.yml -p $(workspaces.playbooks.path)/ansible/roles
-           - name: list-pvc
-             image: quay.io/tauerbec/ansible
-             script: |
-               #!/bin/bash
-               ls $(workspaces.playbooks.path)
-               ls $(workspaces.playbooks.path)/ansible
            - name: run-playbook
              image: quay.io/tauerbec/ansible
-             command: ['ansible-playbook']
+#             command: ['ansible-playbook']
              args:
+               - ansible-playbook
                - -i 
                - $(workspaces.playbooks.path)/ansible/inventory
                - $(workspaces.playbooks.path)/ansible/playbook.yml
-#               - -e 
-#               - "host_name=vmi-fedora.cnv-tekton.svc.local"
        runAfter:
          - wait-for-vm
          - get-playbooks
