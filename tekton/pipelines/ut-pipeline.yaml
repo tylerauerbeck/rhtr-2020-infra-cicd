@@ -145,7 +145,7 @@ spec:
                - $(workspaces.playbooks.path)/ansible/inventory
                - $(workspaces.playbooks.path)/ansible/playbook.yml
                - -e 
-               - 'host_name=$(cnv-tekton-$(tasks.create-id.results.pipeline-id))'
+               - 'host_name=vmi-fedora.$(cnv-tekton-$(tasks.create-id.results.pipeline-id)).svc.local'
        runAfter:
          - wait-for-vm
          - get-playbooks
