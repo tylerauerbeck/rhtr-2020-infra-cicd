@@ -116,7 +116,7 @@ spec:
          name: sleep
        params:
          - name: sleepSeconds
-           value: "300"
+           value: "150"
        runAfter:
          - create-vmi
      - name: run-ansible
