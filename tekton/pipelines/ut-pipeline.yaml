@@ -135,7 +135,7 @@ spec:
                set -e
                if [ -f requirements.yml ];
                then
-                 ansible-galaxy install -r requirements.yml -p roles
+                 ansible-galaxy install -r $(workspaces.playbooks.path)/ansible/requirements.yml -p $(workspaces.playbooks.path)/ansible/roles
                fi
            - name: list-pvc
              image: docker.io/ansible/ansible-runner
