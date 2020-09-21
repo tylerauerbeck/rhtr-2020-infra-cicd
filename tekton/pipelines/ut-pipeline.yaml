@@ -12,33 +12,6 @@ spec:
       This workspace will receive the cloned git repo and be passed
       to the next Task for the repo's README.md file to be read.
   tasks:
-     - name: create-id
-       taskRef:
-         name: create-id
-     - name: create-ns
-       taskRef:
-         name: openshift-client 
-       params:
-         - name: ARGS
-           value:
-             - new-project
-             - cnv-tekton-$(tasks.create-id.results.pipeline-id)
-       runAfter:
-         - create-id
-     - name: grant-perms
-       taskRef:
-         name: openshift-client
-       params:
-         - name: ARGS
-           value:
-             - create
-             - rolebinding
-             - cnv-tekton
-             - --clusterrole=admin
-             - --serviceaccount=cnv-tekton:pipeline-sa
-             - -n cnv-tekton-$(tasks.create-id.results.pipeline-id)
-       runAfter:
-         - create-ns 
      - name: get-playbooks
        taskRef: 
          name: git-clone
@@ -83,9 +56,8 @@ spec:
          name: openshift-client
        params:
          - name: ARGS
-           value: ["apply","-f","https://raw.githubusercontent.com/tylerauerbeck/rhtr-2020-infra-cicd/main/cnv/fedora32.yaml","-n","cnv-tekton-$(tasks.create-id.results.pipeline-id)"]
+           value: ["apply","-f","https://raw.githubusercontent.com/tylerauerbeck/rhtr-2020-infra-cicd/main/cnv/fedora32.yaml"]
        runAfter:
-         - grant-perms
          - lint-dns
 # Just directly creating a service instead of using `virtctl expose` because for some reason it wants to inject a newline in the namespace
 #     - name: expose-vmi-ssh
@@ -107,7 +79,6 @@ spec:
              - clusterip
              - vmi-fedora
              - --tcp=22
-             - -n cnv-tekton-$(tasks.create-id.results.pipeline-id)
        runAfter:
          - create-vmi
 # This is cheating. We're just outright waiting for 5 minutes to give the VM time to stand up
@@ -116,7 +87,7 @@ spec:
          name: sleep
        params:
          - name: sleepSeconds
-           value: "150"
+           value: "180"
        runAfter:
          - create-vmi
      - name: run-ansible
@@ -147,8 +118,8 @@ spec:
                - -i 
                - $(workspaces.playbooks.path)/ansible/inventory
                - $(workspaces.playbooks.path)/ansible/playbook.yml
-               - -e 
-               - 'host_name=vmi-fedora.$(cnv-tekton-$(tasks.create-id.results.pipeline-id)).svc.local'
+#               - -e 
+#               - "host_name=vmi-fedora.cnv-tekton.svc.local"
        runAfter:
          - wait-for-vm
          - get-playbooks
