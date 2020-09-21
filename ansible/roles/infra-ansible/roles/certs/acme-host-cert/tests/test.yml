@@ -1,5 +1,0 @@
----
-- hosts: cert-host
-  roles:
-  - certs/generate-csr
-  - certs/acme-host-cert

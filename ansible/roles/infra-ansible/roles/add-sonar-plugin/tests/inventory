@@ -1,2 +1,0 @@
-[ocp-sonarqube]
-localhost ansible_connection=local

@@ -1,6 +1,0 @@
----
-
-- hosts: file-endpoint
-  roles:
-    - get-remote-file
-

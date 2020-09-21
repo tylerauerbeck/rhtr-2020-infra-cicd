@@ -4,6 +4,9 @@ metadata:
   name: rhtr-dns-ut 
 spec:
   workspaces:
+  - name: ansible-playbooks
+    description: |
+      This workspace will contain ansible playbooks
   - name: shared-data
     description: |
       This workspace will receive the cloned git repo and be passed
@@ -36,6 +39,19 @@ spec:
              - -n cnv-tekton-$(tasks.create-id.results.pipeline-id)
        runAfter:
          - create-ns 
+     - name: get-playbooks
+       taskRef: 
+         name: git-clone
+       workspaces:
+       - name: output
+         workspace: ansible-playbooks
+       params:
+       - name: url
+         value: https://github.com/tylerauerbeck/rhtr-2020-infra-cicd
+       - name: revision
+         value: "main"
+       - name: deleteExisting
+         value: "true"
      - name: fetch-repo
        taskRef:
          name: git-clone
@@ -101,4 +117,35 @@ spec:
        params:
          - name: sleepSeconds
            value: "300"
-#     - name: run-ansible
+       runAfter:
+         - create-vmi
+     - name: run-ansible
+       workspaces:
+         - name: playbooks
+           workspace: ansible-playbooks
+       taskSpec:
+         workspaces:
+           - name: playbooks
+             description: place that holds the playbooks
+         steps:
+           - name: requirements
+             image: docker.io/ansible/ansible-runner
+             script: |
+               #!/bin/bash
+               set -e
+               if [ -f requirements.yml ];
+               then
+                 ansible-galaxy install -r requirements.yml -p roles
+               fi
+           - name: run-playbook
+             image: docker.io/ansible/ansible-runner
+             command: ['ansible-playbook']
+             args:
+               - -i 
+               - $(workspaces.playbooks.path)/ansible/inventory
+               - $(workspaces.playbooks.path)/ansible/playbook.yml
+               - -e 
+               - 'host_name=$(cnv-tekton-$(tasks.create-id.results.pipeline-id))'
+       runAfter:
+         - wait-for-vm
+         - get-playbooks
