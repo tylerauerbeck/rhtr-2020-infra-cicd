@@ -81,7 +81,7 @@ spec:
              - --tcp=22
        runAfter:
          - create-vmi
-# This is cheating. We're just outright waiting for 5 minutes to give the VM time to stand up
+# This is cheating. We're just outright waiting for 3 minutes to give the VM time to stand up
      - name: wait-for-vm
        taskRef:
          name: sleep
@@ -105,13 +105,22 @@ spec:
                #!/bin/bash
                set -e
                ansible-galaxy install -r $(workspaces.playbooks.path)/ansible/requirements.yml -p $(workspaces.playbooks.path)/ansible/roles
+               chmod 700 $(workspaces.playbooks.path)/ansible/files/id_rsa
+           - name: get-ip
+             image: quay.io/openshift/origin-cli
+             script: |
+               #!/bin/bash
+               IP=$(oc get vmi vmi-fedora-1 -o=jsonpath='{.status.interfaces[0].ipAddress}')
+               echo "[dns-server]" > $(workspaces.playbooks.path)/ansible/inventory/hosts
+               echo $IP >> $(workspaces.playbooks.path)/ansible/inventory/hosts
+               chmod 700 $(workspaces.playbooks.path)/ansible/files/id_rsa
            - name: run-playbook
              image: quay.io/tauerbec/ansible
-#             command: ['ansible-playbook']
+             command: ["/usr/local/bin/script.sh"]
              args:
-               - ansible-playbook
+               - ansible-playbook 
                - -i 
-               - $(workspaces.playbooks.path)/ansible/inventory
+               - $(workspaces.playbooks.path)/ansible/inventory 
                - $(workspaces.playbooks.path)/ansible/playbook.yml
        runAfter:
          - wait-for-vm
