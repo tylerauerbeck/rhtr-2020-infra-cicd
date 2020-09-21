@@ -1,2 +1,3 @@
 *.qcow2
 virtctl
+ansible/roles
