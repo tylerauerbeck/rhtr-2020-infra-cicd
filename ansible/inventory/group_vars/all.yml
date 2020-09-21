@@ -2,7 +2,7 @@
 
 ansible_become: true
 ansible_user: fedora
-ansible_ssh_private_key_file: "{{ inventory_dir }}/../files/id_rsa"
+ansible_ssh_pass: fedora
 
 dns_data:
   views:
