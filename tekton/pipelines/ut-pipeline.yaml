@@ -133,10 +133,7 @@ spec:
              script: |
                #!/bin/bash
                set -e
-               if [ -f requirements.yml ];
-               then
-                 ansible-galaxy install -r $(workspaces.playbooks.path)/ansible/requirements.yml -p $(workspaces.playbooks.path)/ansible/roles
-               fi
+               ansible-galaxy install -r $(workspaces.playbooks.path)/ansible/requirements.yml -p $(workspaces.playbooks.path)/ansible/roles
            - name: list-pvc
              image: docker.io/ansible/ansible-runner
              script: |
