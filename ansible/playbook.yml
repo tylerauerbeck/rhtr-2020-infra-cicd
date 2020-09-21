@@ -2,5 +2,5 @@
 
 - hosts: "{{ host_name }}" 
   roles:
-    - role: dns/config-dns-server-bind
+    - role: infra-ansible/roles/dns/config-dns-server-bind
 
