@@ -129,19 +129,19 @@ spec:
              description: place that holds the playbooks
          steps:
            - name: requirements
-             image: docker.io/ansible/ansible-runner
+             image: quay.io/tauerbec/ansible 
              script: |
                #!/bin/bash
                set -e
                ansible-galaxy install -r $(workspaces.playbooks.path)/ansible/requirements.yml -p $(workspaces.playbooks.path)/ansible/roles
            - name: list-pvc
-             image: docker.io/ansible/ansible-runner
+             image: quay.io/tauerbec/ansible
              script: |
                #!/bin/bash
                ls $(workspaces.playbooks.path)
                ls $(workspaces.playbooks.path)/ansible
            - name: run-playbook
-             image: docker.io/ansible/ansible-runner
+             image: quay.io/tauerbec/ansible
              command: ['ansible-playbook']
              args:
                - -i 
